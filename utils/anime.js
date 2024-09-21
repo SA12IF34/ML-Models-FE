@@ -1,12 +1,7 @@
 import axios from "axios"
 
-const tokens = {
-    access_token: import.meta.VITE_MAL_ACCESS_TOKEN,
-    refresh_token: import.meta.VITE_MAL_REFRESH_TOKEN
-}
-
 const api = axios.create({
-    baseURL: 'https://thingproxy.freeboard.io/fetch/'+'https://api.myanimelist.net/v2/'
+    baseURL: 'http://127.0.0.1:8000/'
 })
 
 const genreNames = ['action', 'adventure', 'ai', 'arts', 'cars', 'comedy', 'dementia',
@@ -20,11 +15,7 @@ const genreNames = ['action', 'adventure', 'ai', 'arts', 'cars', 'comedy', 'deme
 
 async function handleGetAnime(animeId) {
     try {
-        const response = await api.get(`anime/${animeId}?fields=id,title,synopsis,main_picture,mean,genres`, {
-            headers: {
-                'Authorization': 'Bearer '+ tokens['access_token']
-            }
-        })
+        const response = await api.get(`get-anime/${animeId}/`)
 
         if (response.status === 200) {
             const data = await response.data;
