@@ -6,7 +6,7 @@ const tokens = {
 }
 
 const api = axios.create({
-    baseURL: 'https://api.myanimelist.net/v2/'
+    baseURL: 'https://thingproxy.freeboard.io/fetch/'+'https://api.myanimelist.net/v2/'
 })
 
 const genreNames = ['action', 'adventure', 'ai', 'arts', 'cars', 'comedy', 'dementia',
