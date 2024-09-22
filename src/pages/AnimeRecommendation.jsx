@@ -32,7 +32,7 @@ function AnimeRecommendation() {
       try {
           const genresArr = await handleMakeProfile(profile);
           console.log('Made Profile');
-          const response = await axios.post(import.meta.VITE_ANIME_RECOMMEND_URL, {
+          const response = await axios.post('https://api.ml.saifchan.online/recommend-anime/', {
               profile: genresArr,
               seen_animes: profile
           })
@@ -47,7 +47,7 @@ function AnimeRecommendation() {
           }
   
       } catch (error) {
-          console.log(error['response']['status']);
+          console.log(error);
       }
   }
 
