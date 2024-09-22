@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const api = axios.create({
-    baseURL: import.meta.VITE_API_ROOT_URL
+    baseURL: 'https://api.ml.saifchan.online/'
 })
 
 const genreNames = ['action', 'adventure', 'ai', 'arts', 'cars', 'comedy', 'dementia',
