@@ -47,7 +47,7 @@ function AnimeRecommendation() {
           }
   
       } catch (error) {
-          console.log(error['response']['status']);
+          console.log(error);
       }
   }
 
