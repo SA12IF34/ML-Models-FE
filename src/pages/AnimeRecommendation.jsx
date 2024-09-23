@@ -39,10 +39,8 @@ function AnimeRecommendation() {
   
           if (response.status === 200) {
               const data = await response.data;
-              console.log('Got Recommendations.');
-              const animesArr = await hanldeGetAnimes(data['recommendations']);
-              console.log('Got Animes Data.')
-              setRecommendations(animesArr)
+              console.log(data);
+              setRecommendations(data['recommendations']);
               return;
           }
   
