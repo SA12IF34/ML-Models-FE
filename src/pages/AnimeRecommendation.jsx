@@ -32,7 +32,7 @@ function AnimeRecommendation() {
       try {
           const genresArr = await handleMakeProfile(profile);
           console.log('Made Profile');
-          const response = await axios.post('https://api.ml.saifchan.online/recommend-anime/', {
+          const response = await axios.post(import.meta.env.VITE_ANIME_RECOMMEND_URL, {
               profile: genresArr,
               seen_animes: profile
           })

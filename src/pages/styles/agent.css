@@ -1,0 +1,117 @@
+.page {
+    width: 100%;
+    height: calc(100vh - 2.5vw);
+    position: relative;
+    padding: 30px 0px;
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+}
+
+.page > a {
+    margin: 0 20px;
+}
+
+.page > .container {
+    width: 100%;
+    height: max-content;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 10px;
+}
+
+canvas#canvas {
+    width: 100%;
+    height: 60px;
+    display: block;
+}
+
+.btns {
+    display: flex;
+    column-gap: 10px;
+    align-items: center;
+}
+
+.btns > button {
+    width: max-content;
+    height: max-content;
+    display: flex;
+    padding: 10px;
+    border-radius: 50%;
+    background-color: #6cb8e0;
+    cursor: pointer;
+    border: none;
+}
+
+.record {
+    font-size: 30px;
+    color: whitesmoke;
+}
+.record svg {
+    pointer-events: none;
+}
+
+.stop-play {
+    padding: 15px !important;
+}
+.square {
+    width: 20px;
+    height: 20px;
+    background-color: whitesmoke;
+}
+
+.btns>button.mouse-down {
+    background-color: rgb(90, 162, 200);
+}
+
+.page > .msg-container {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: start;
+    row-gap: 15px;
+}
+
+
+.page > .msg-container::-webkit-scrollbar {
+    width: 5px;
+}
+.page > .msg-container::-webkit-scrollbar-thumb {
+    background-color: silver;
+    border-radius: 999px;
+}
+
+.page > .msg-container > .urls-container {
+    width: 200px;
+    height: max-content;
+    min-height: 150px;
+    background-color: rgb(215, 217, 220);
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column-reverse;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    margin: 0 20px;
+}
+.page > .msg-container > .urls-container::-webkit-scrollbar {
+    width: 3px;
+}
+.page > .msg-container > .urls-container::-webkit-scrollbar-thumb {
+    background-color: gray;
+    border-radius: 999px;
+}
+
+.page > .msg-container > .urls-container > a {
+    display: block;
+    margin: 10px 0;
+    word-wrap: break-word;
+}
+
+.none-btn {
+    display: none !important;
+}

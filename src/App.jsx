@@ -3,6 +3,7 @@ import './App.css';
 
 import Home from './pages/Home';
 import AnimeRecommendation from './pages/AnimeRecommendation';
+import Agent from './pages/Agent';
 
 function App() {
 
@@ -10,6 +11,7 @@ function App() {
     <Routes>
       <Route path='/' element={<Home />} />
       <Route path='/models/anime-recommender/' element={<AnimeRecommendation />} />
+      <Route path='/apps/python-agent/' element={<Agent />} />
     </Routes>
   )
 }

@@ -99,11 +99,20 @@ function Home() {
             <div className="grand-container">
                 <div className="models-container">
                     <h2>Recommender Systems</h2>
-                    {/* <br /> */}
                     <div className="container">
                         <Link to='/models/anime-recommender/'>
                             <div className="model">
                                 <h4>Anime Recommendation</h4>
+                            </div>
+                        </Link>
+                    </div>
+                </div>
+                <div className="models-container">
+                    <h2>AI Agents & Apps</h2>
+                    <div className="container">
+                        <Link to='/apps/python-agent/'>
+                            <div className="model">
+                                <h4>AI Agent Assistant</h4>
                             </div>
                         </Link>
                     </div>
