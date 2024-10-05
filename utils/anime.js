@@ -23,10 +23,15 @@ async function handleGetAnime(animeId) {
             return data;
         }
     } catch (error) {
-        if (error['response']['status'] === 404) {
-            alert(`Anime ID does not exist or you didn't enter MyAnimeList ID.`)
-            return error['response']['status'];
+        const response = error['response']
+        if (response) {
+            if (response['status'] === 404) {
+                alert(`Anime ID does not exist or you didn't enter Myanimelist anime ID.`)
+            }
+
+            return response['status'];
         }
+        return 500;
     }
 }
 
@@ -34,14 +39,15 @@ async function hanldeGetAnimes(animeIds) {
     var animesArr = [];
     for (let id of animeIds) {
         var anime = await handleGetAnime(id);
-        animesArr.push(anime);
+        if (typeof anime === 'number' && anime === 500) return [];
+        typeof anime === 'object' ? animesArr.push(anime) : '';
     }
-    console.log(animesArr)
     return animesArr;
 }
 
 async function handleMakeProfile(profile) {
   var profileAnimes = await hanldeGetAnimes(profile);
+  if (profileAnimes.length === 0) throw Error('Failed fetching data.');
   var genresArr = profileAnimes.map(anime => {
       var g = anime['genres'];
       var genres = [];

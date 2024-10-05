@@ -12,7 +12,8 @@ import DisplayRecommendations from './components/DisplayRecommendations';
 function AnimeRecommendation() {
 
   const [recommendations, setRecommendations] = useState(null);
-  const [startLoading, setStartLoading] = useState(false);
+//   const [startLoading, setStartLoading] = useState(false);
+  const [state, setState]  = useState('pending') // pending | loading | error
   const [currentProfile, setCurrentProfile] = useState();
 
   const sampleProfiles = {  
@@ -31,7 +32,6 @@ function AnimeRecommendation() {
   async function handleRecommend(profile) {
       try {
           const genresArr = await handleMakeProfile(profile);
-          console.log('Made Profile');
           const response = await axios.post(import.meta.env.VITE_ANIME_RECOMMEND_URL, {
               profile: genresArr,
               seen_animes: profile
@@ -45,7 +45,8 @@ function AnimeRecommendation() {
           }
   
       } catch (error) {
-          console.log(error);
+        console.log(error);
+        setState('error');
       }
   }
 
@@ -66,6 +67,9 @@ function AnimeRecommendation() {
     let btnsContainer = document.createElement('div');
     let closeBtn = document.createElement('button');
     let setUnsetBtn = document.createElement('button');
+
+    let errorTxt = document.createElement('h3');
+    errorTxt.textContent = 'Encountered error fetching data.. try again.';
 
     popup.classList.add('popup');
     profileContainer.classList.add('container');
@@ -105,10 +109,12 @@ function AnimeRecommendation() {
     
     let animes = await hanldeGetAnimes(profile);
 
-    animes.forEach(anime => {
-        if (popup.querySelector('.loading')) {
-            popup.querySelector('.loading').remove();
-        }
+    if (popup.querySelector('.loading')) {
+        popup.querySelector('.loading').remove();
+    }
+
+    animes.length > 0 ? animes.forEach(anime => {
+        
 
         var container = document.createElement('div');
         var img = document.createElement('img');
@@ -121,7 +127,8 @@ function AnimeRecommendation() {
 
         container.append(img, h4);
         profileContainer.appendChild(container);
-    })
+
+    }) : profileContainer.appendChild(errorTxt);
   }
 
   function handleDisplayProfileCreate() {
@@ -150,7 +157,7 @@ function AnimeRecommendation() {
         if (input.value) {
             var anime = await handleGetAnime(input.value);
 
-            if (anime && anime !== 404) {
+            if (anime && anime !== 404 && anime !== 500) {
                 var div = document.createElement('div');
                 var img = document.createElement('img');
                 var h4 = document.createElement('h4');
@@ -169,7 +176,7 @@ function AnimeRecommendation() {
                 return;
             } else if (anime === 404) return;
 
-            alert('Something went wrong, try again.');
+            alert('Failed fetching data.');
             return;
 
         } 
@@ -216,21 +223,27 @@ function AnimeRecommendation() {
                 <button onClick={() => {
                     setRecommendations(null);
                     if (currentProfile && currentProfile.length > 0) {
-                        setStartLoading(true);
+                        // setStartLoading(true);
+                        setState('loading');
                         handleRecommend(currentProfile);
                     } else {
                         alert('Please specify a profile or create one.')
-                        setStartLoading(false);
+                        // setStartLoading(false);
+                        setState('pending');
                     }
                 }} className='recommend-btn'>Recommend</button>
                 <div className="recommendations-list">
-                    {startLoading && (
+                    {state === 'loading' ? (
                         <>
                         {recommendations && recommendations.length > 0 ? (
                             <DisplayRecommendations recommendations={recommendations} />
                         ): (<Loading size={65} />)}
                         </>
-                    )}
+                    ) : state === 'error' ? (
+                        <>
+                         <h2>Encountered error fetching data.. try again.</h2>
+                        </>
+                    ) : (<></>)}
                     
                 </div>
             </div>
