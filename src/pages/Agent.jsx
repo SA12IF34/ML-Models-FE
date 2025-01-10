@@ -175,7 +175,7 @@ function Agent() {
 
   return (
     <div className='page'>
-        <span onClick={()=>{alert('To make it search the web start your query with "search the web for...".')}}
+        <span onClick={()=>{alert('To make it search the web start your query with "search the web for...".\n\nThe agent will not work on Brave browser.')}}
         style={{
             position: 'absolute',
             top: '0px',

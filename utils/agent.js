@@ -4,12 +4,13 @@ const api = axios.create({
     baseURL: import.meta.env.VITE_API_ROOT_URL
 })
 
-async function handleCallAgent(inputMessage) {
+async function handleCallAgent(arrayBuffer, rate) {
     try {
         let chatHistory = window.sessionStorage.getItem('chatHistory');
         chatHistory = chatHistory ? JSON.parse(chatHistory) : [];
         const response = await api.post('agent/', {
-            message: inputMessage,
+            buffer: arrayBuffer,
+            rate: rate,
             history: chatHistory
         });
 
