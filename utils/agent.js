@@ -9,8 +9,8 @@ async function handleCallAgent(arrayBuffer, rate) {
         let chatHistory = window.sessionStorage.getItem('chatHistory');
         chatHistory = chatHistory ? JSON.parse(chatHistory) : [];
         const response = await api.post('agent/', {
-            buffer: arrayBuffer,
-            rate: rate,
+            message: arrayBuffer,
+            // rate: rate,
             history: chatHistory
         });
 
