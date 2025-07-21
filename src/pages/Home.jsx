@@ -105,6 +105,11 @@ function Home() {
                                 <h4>Anime Recommendation</h4>
                             </div>
                         </Link>
+                        <Link to='/models/imdb-recommender/'>
+                            <div className="model">
+                                <h4>Movie Recommendation</h4>
+                            </div>
+                        </Link>
                     </div>
                 </div>
                 <div className="models-container">

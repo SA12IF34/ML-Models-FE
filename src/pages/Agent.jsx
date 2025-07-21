@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import {TiMicrophoneOutline} from 'react-icons/ti';
-import {TbMicrophoneOff} from 'react-icons/tb';
+import { SlArrowDown } from "react-icons/sl";
 import { handleCallAgent } from '../../utils/agent';
 import ReactLoading from 'react-loading';
 
@@ -8,8 +8,6 @@ import './styles/agent.css';
 
 function Agent() {
   
-  const [recording, setRecording] = useState(false);
-  const [recognition, setRecognition] = useState(null);
   const [waiting, setWaiting]  = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
 
@@ -25,137 +23,135 @@ function Agent() {
     canvasCtx.beginPath();
     canvasCtx.moveTo(0, canvas.height/2);
     canvasCtx.lineTo(canvas.width, canvas.height/2);
-    canvasCtx.stroke();
+    canvasCtx.stroke(); 
 
-    if (window && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList;
-
-        let recognitionInstance = new SpeechRecognition();
-        let speechRecognitionList = new SpeechGrammarList();
-        setRecognition(recognitionInstance);
-
-        recognitionInstance.grammars = speechRecognitionList;
-        recognitionInstance.continuous = false;
-        recognitionInstance.lang = "en";
-        recognitionInstance.interimResults = false;
-        recognitionInstance.maxAlternatives = 1;
-    
-
-        recognitionInstance.onnomatch = () => {
-            setWaiting(false);
-        }
-
-        recognitionInstance.onspeechend = () => {
-            setRecording(false)
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        let chunks = [];
+        navigator.mediaDevices.getUserMedia({audio: true})
+        .then((stream) => {
+            const recorder = new MediaRecorder(stream);
             
-            recognitionInstance.stop()
-        }
-        recognitionInstance.onend = () => {
-            setRecording(false)
-        };
+            document.querySelector('button.record').onmousedown = () => {
+                recorder.start();
+                console.log('State: ', recorder.state);
+                console.log("recorder started");
+            }
 
-        recognitionInstance.onresult = async (event) => {
-            const transcript = event.results[0][0].transcript;
-            console.log(transcript);
-            recognitionInstance.stop();
-            
-            if (!transcript || transcript === '') {
-                alert('repeat');
-                setWaiting(false)
-                recognitionInstance.start()
-            
-            } else {
-                setWaiting(true);
-                const {urls, audioData} = await handleCallAgent(transcript);
-                setWaiting(false);
-                if (urls && urls.length > 0) {
-                    handleCreateUrlsElement(urls);
-                    recognitionInstance.start();
-                    setRecording(true)
-                } else {
-                    const url = URL.createObjectURL(audioData['blob']);
-                    const audio = new Audio(url);
-                    
-                    audio.onloadeddata = () => {
-                        const audioCtx = new AudioContext();
-                        const analyser = audioCtx.createAnalyser();
-                        const source = audioCtx.createMediaStreamSource(audio.captureStream());
-                        source.connect(analyser);
+            document.querySelector('button.record').onmouseup = () => {        
+                recorder.stop();
+                console.log('State: ', recorder.state);
+            }
 
-                        analyser.fftSize = 1024;
-                        const bufferLength = analyser.frequencyBinCount;
-                        const dataArray = new Uint8Array(bufferLength);
+            recorder.ondataavailable = (e) => {
+                chunks.push(e.data);
+            }
 
-                        audio.play()
-                        setIsAudioPlaying(true);
-                        function draw() {
-                            requestAnimationFrame(draw);
-                            
-                            analyser.getByteTimeDomainData(dataArray);
+            recorder.onstop = async () => {
+                const blob = new Blob(chunks, { type: "audio/ogg; codecs=opus" });
+                chunks = [];
 
-                            canvasCtx.fillStyle = "rgb(243 243 243)";
-                            canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+                if (blob.size < 10) {
+                    return;
+                }
 
-                            canvasCtx.lineWidth = 3;
-                            canvasCtx.strokeStyle = "rgb(0 0 0)";
-                            canvasCtx.beginPath();
+                try {
+                    const buffer = await blob.arrayBuffer();
+                    const audioContext = new AudioContext();
+                    const audioBuffer = await audioContext.decodeAudioData(buffer);
+                    // Get raw audio data
+                    const rawData = audioBuffer.getChannelData(0);
+                    const sampleRate = audioBuffer.sampleRate;
 
-                            const sliceWidth = canvas.width / bufferLength;
-                            let x = 0;
+                    setWaiting(true);
+                    const data = await handleCallAgent(JSON.stringify(Array.from(rawData)), sampleRate);
+                    setWaiting(false);
 
-                            for (let i = 0; i < bufferLength; i++) {
-                              const v = dataArray[i] / 128.0;
-                              const y = v * (canvas.height / 2);
-                            
-                              if (i === 0) {
-                                canvasCtx.moveTo(x, y);
-                              } else {
-                                canvasCtx.lineTo(x, y);
-                              }
-                            
-                              x += sliceWidth;
+                    if (data === -1) {
+                        return;
+                    }
+
+                    const {urls, audioData} = data;
+
+                    if (urls && urls.length > 0) {
+                        handleCreateUrlsElement(urls);                    
+                    } else {
+                        const url = URL.createObjectURL(audioData['blob']);
+                        const audio = new Audio(url);
+                        
+                        audio.onloadeddata = () => {
+                            const audioCtx = new AudioContext();
+                            const analyser = audioCtx.createAnalyser();
+                            const source = audioCtx.createMediaStreamSource(audio.captureStream());
+                            source.connect(analyser);
+
+                            analyser.fftSize = 1024;
+                            const bufferLength = analyser.frequencyBinCount;
+                            const dataArray = new Uint8Array(bufferLength);
+
+                            audio.play()
+                            setIsAudioPlaying(true);
+                            function draw() {
+                                requestAnimationFrame(draw);
+                                
+                                analyser.getByteTimeDomainData(dataArray);
+
+                                canvasCtx.fillStyle = "rgb(243 243 243)";
+                                canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+                                canvasCtx.lineWidth = 3;
+                                canvasCtx.strokeStyle = "rgb(0 0 0)";
+                                canvasCtx.beginPath();
+
+                                const sliceWidth = canvas.width / bufferLength;
+                                let x = 0;
+
+                                for (let i = 0; i < bufferLength; i++) {
+                                  const v = dataArray[i] / 128.0;
+                                  const y = v * (canvas.height / 2);
+                                
+                                  if (i === 0) {
+                                    canvasCtx.moveTo(x, y);
+                                  } else {
+                                    canvasCtx.lineTo(x, y);
+                                  }
+                                
+                                  x += sliceWidth;
+                                }
+                                canvasCtx.lineTo(canvas.width, canvas.height / 2);
+                                canvasCtx.stroke();
+
                             }
-                            canvasCtx.lineTo(canvas.width, canvas.height / 2);
-                            canvasCtx.stroke();
-
+                            draw()
                         }
-                        draw()
-                    }
 
-                    audio.onended = () => {
-                        recognitionInstance.start();
-                        setRecording(true);
-                        setIsAudioPlaying(false);
-                    }
-
-                    document.querySelector('button.stop-play').onclick = () => {
-                        if (!audio.paused) {
-                            audio.pause()
-                            audio.srcObject = null;
-                            audio.src = '';
+                        audio.onended = () => {
                             setIsAudioPlaying(false);
                         }
+
+                        document.querySelector('button.stop-play').onclick = () => {
+                            if (!audio.paused) {
+                                audio.pause()
+                                audio.srcObject = null;
+                                audio.src = '';
+                                setIsAudioPlaying(false);
+                            }
+                        }
                     }
+
+
+                } catch (error) {
+                    
                 }
             }
-        }
+
+        }, (err) => {
+            console.error(`The following getUserMedia error occurred: ${err}`);
+        })
         
     }
   }, [])
 
-  function handleToggleRecording() {
-    if (recognition) {
-        if (recording) {
-            recognition.stop();
-            setRecording(false);
-        } else {
-            recognition.start();
-            setRecording(true);
-        }
-        setWaiting(false);
-    }
-  }
+
   function handleCreateUrlsElement(urls) {
     console.log(urls);
     urls = urls.length <= 4 ? urls : urls.slice(0, 3);
@@ -172,46 +168,55 @@ function Agent() {
     document.querySelector('.page > .msg-container').append(container);
   }
 
+  function handleShowNotes(e) {
+    let container = document.querySelector('.notes > div:nth-child(2)');
+    if (e.target.classList.contains('flip')) {
+        container.style.height = ``;
+    } else {
+        container.style.height = `${container.firstElementChild.clientHeight+20}px`;
+    }
+
+    e.target.classList.toggle('flip');
+  }
+
 
   return (
-    <div className='page'>
-        <span onClick={()=>{alert('To make it search the web start your query with "search the web for...".\n\nThe agent will not work on Brave browser.')}}
-        style={{
-            position: 'absolute',
-            top: '0px',
-            right: '0px',
-            backgroundColor: 'silver',
-            color: 'gray',
-            fontSize: '1.5em',
-            width: '40px',
-            height: '40px',
-            border: 'none',
-            borderRadius: '50%',
-            textAlign: 'center',
-            alignContent: 'center',
-            opacity: 0.6, 
-            cursor: 'pointer'
-            }}>!</span>
+    <div className='page agent-page'>
         <a style={{color: 'black'}} href="/"><h3>Back to Home Page</h3></a>
+        
         <div className="container">
             <canvas id='canvas' ></canvas>
-            <div className='btns'>
-                <button 
-                onMouseDown={(e) => {e.target.classList.add('mouse-down')}}
-                onMouseUp={(e) => {e.target.classList.remove('mouse-down');}}
-                onClick={handleToggleRecording} className='record'>
-                    {recording ? (
-                        <TbMicrophoneOff />
-                    ): (
+            <div>
+                <div className="notes">
+                    <div>
+                        <h3>Important Notes</h3>
+                        <span onClick={handleShowNotes}>
+                            <SlArrowDown />
+                        </span>
+                    </div>
+                    <div>
+                        <ul>
+                            <li>Hold down mouse left button on the mic to speak</li>
+                            <li>The Agent can search the Web</li>
+                            <li>The Agent speaks english only currently</li>
+                        </ul>
+                    </div>
+                </div>
+                <div className='btns'>
+                    <button 
+                    onMouseDown={(e) => {e.target.classList.add('mouse-down')}}
+                    onMouseUp={(e) => {e.target.classList.remove('mouse-down');}}
+                    className='record'>                        
                         <TiMicrophoneOutline />
-                    )}
-                </button>
-                <button 
-                onMouseDown={(e) => {e.target.classList.add('mouse-down')}}
-                onMouseUp={(e) => {e.target.classList.remove('mouse-down')}}
-                className={`stop-play ${isAudioPlaying ? '': 'none-btn'}`}>
-                    <span className='square'></span>
-                </button>
+                    </button>
+                    <button 
+                    onMouseDown={(e) => {e.target.classList.add('mouse-down')}}
+                    onMouseUp={(e) => {e.target.classList.remove('mouse-down')}}
+                    className={`stop-play ${isAudioPlaying ? '': 'none-btn'}`}>
+                        <span className='square'></span>
+                    </button>
+                </div>
+
             </div>
             {waiting && (
                 <ReactLoading type={'bubbles'} color={'#6cb8e0'} />

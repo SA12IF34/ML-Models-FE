@@ -1,163 +1,413 @@
 :root {
-    --set-color: rgb(108, 184, 224);
+    --primary-color: #2e51a2;
+    --primary-hover: #1d3b8b;
+    --background: #f5f5f5;
+    --text-primary: #333;
+    --text-secondary: #666;
+    --accent: #e4b321;
+}
+
+
+.page {
+    padding: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .page > h3 {
-    margin: 20px;
+    margin: 20px 0;
     font-weight: 500;
+    color: var(--text-primary);
 }
 
 .page > div {
     width: 100%;
-    height: max-content;
     display: grid;
-    grid-template-columns: 65% 35%;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: 30px;
 }
 
-.profiles {
-    border-left: 1px solid gray;
-    padding: 0 20px;
-}
-
-.profiles > div:nth-child(1) {
-    display: flex;
-    column-gap: 10px;
-    border-bottom: 1px solid gray;
-    padding: 10px;
-    align-items: center;
-}
-
-.profiles .sample-profile{
+/* Recommendations section */
+.recommendations {
     padding: 20px;
-    border-bottom: 2px solid gray;
-    cursor: pointer;
-}
-.profiles .sample-profile > h3 {
-    font-weight: 500;
-    pointer-events: none;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-.profiles .sample-profile.selected {
-    background-color: var(--set-color);
+.recommend-btn {
+    background: var(--primary-color);
     color: white;
     border: none;
+    padding: 12px 24px;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-bottom: 20px;
 }
 
-button {
-    padding: 5px 10px;
-    cursor: pointer;
+.recommend-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
 }
 
 .recommendations-list {
-    margin: 20px 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
 }
 
 .recommendation {
     display: flex;
-    column-gap: 15px;
-    padding: 10px;
-    border-bottom: 2px solid gray;
-}
-.recommendation > img {
-    height: 200px;
-    width: auto;
-    border-radius: 5px;
-    border: 1px solid gray;
-}
-.recommendation > div {
-    display: flex;
     flex-direction: column;
-    row-gap: 20px;
-}
-.recommendation > div h4 {
-    font-weight: bold;
-}
-.recommendation > div a {
-    justify-self: end;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+    border: 1px solid rgba(0,0,0,0.1);
 }
 
-.popup {
-    width: 500px;
-    height: 400px;
-    border-radius: 15px;
-    background-color: #f3f3f3;
-    border: 2px solid gray;
+.recommendation:hover {
+    transform: translateY(-4px);
+}
+
+.recommendation img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.recommendation > div {
     padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.recommendation h4 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    line-height: 1.4;
+}
+
+.recommendation p {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.recommendation span {
+    color: var(--accent);
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.recommendation a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    word-break: break-all;
+}
+
+.recommendation a:hover {
+    text-decoration: underline;
+}
+
+/* Profiles section */
+.profiles {
+    background: var(--background);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.profiles > div:first-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.profiles h4 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+}
+
+.create-profile {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.create-profile:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.sample-profiles-list {
+    display: grid;
+    gap: 12px;
+}
+
+.sample-profile {
+    background: white;
+    padding: 15px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.sample-profile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.sample-profile.selected {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.sample-profile h3 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 500;
+    pointer-events: none;
+}
+
+.sample-profile.selected h3 {
+    color: white;
+}
+
+/* Popup styles */
+.popup {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    width: 90%;
+    max-width: 600px;
+    max-height: 85vh;
     z-index: 1000;
-    display: grid;
-    row-gap: 10px;
-}
-.popup.popup-flex {
-    display: flex !important;
-    flex-direction: column !important;
-    row-gap: 10px !important;
-}
-
-.popup > .container {
-    width: 100%;
-    height: 100%;
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
-.popup > .container::-webkit-scrollbar {
-    width: 5px;
-    background-color: transparent;
-}
-.popup > .container::-webkit-scrollbar-thumb {
-    background-color: gray;
-    border-radius: 999px;
-}
-
-.popup > .container > div.s-a {
-    width: 100%;
-    height: 120px;
-    padding: 10px;
-    border-bottom: 1px solid gray;
     display: flex;
-    column-gap: 20px;
-}
-.popup > .container > div > img {
-    height: 100%;
-    width: auto;
-    border-radius: 3px;
-    border: 1px solid silver;
-}
-
-.popup > .btns-container {
-    width: 100%;
-    height: max-content;
-    display: flex;
-    align-items: center;
-    column-gap: 20px;
-    justify-content: flex-end;
-    justify-self: end;
-}
-
-.popup > .btns-container > button.set-unset {
-    color: whitesmoke;
-    background-color: var(--set-color);
-    border: 1px solid var(--set-color);
-    border-radius: 3px;
-
-}
-
-.popup > .input-container {
-    width: 100%;
-    height: max-content;
-    display: flex;
-    column-gap: 10px;
-}
-
-.popup > .input-container > input {
-    outline: none;
+    flex-direction: column;
+    gap: 20px;
     border: none;
+}
+
+.popup .container {
+    flex: 1;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+    padding-right: 10px;
+}
+
+.popup .container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.popup .container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.popup .container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.popup .s-a {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+}
+
+.popup .s-a img {
     width: 100%;
-    background-color: transparent;
-    border-bottom: 1px solid gray;
-    padding: 5px;
-    font-size: 1em;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    border-radius: 6px;
+    transition: transform 0.2s;
+}
+
+.popup .s-a img:hover {
+    transform: scale(1.02);
+}
+
+.popup .s-a h4 {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    line-height: 1.4;
+}
+
+.popup .btns-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.popup button {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.popup .close {
+    background: var(--background);
+    color: var(--text-primary);
+}
+
+.popup .close:hover {
+    background: #e0e0e0;
+}
+
+.popup .set-unset {
+    background: var(--primary-color);
+    color: white;
+}
+
+.popup .set-unset:hover {
+    background: var(--primary-hover);
+}
+
+.popup .input-container {
+    display: flex;
+    gap: 12px;
+}
+
+.popup input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+}
+
+.popup input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* Loading spinner */
+.anime-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+.anime-loading-center {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: transparent;
+    z-index: 1000;
+    width: max-content;
+    height: max-content;
+}
+
+.anime-loading-spinner {
+    position: relative;
+    display: inline-block;
+}
+
+.anime-loading .loading-circle {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 3px solid transparent;
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+
+.anime-loading .loading-circle:nth-child(1) {
+    animation-delay: -0.45s;
+}
+
+.anime-loading .loading-circle:nth-child(2) {
+    animation-delay: -0.3s;
+}
+
+.anime-loading .loading-circle:nth-child(3) {
+    animation-delay: -0.15s;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 1000px) {
+    .page > div {
+        grid-template-columns: 1fr;
+    }
+    
+    .profiles {
+        order: -1;
+    }
+}
+
+@media (max-width: 600px) {
+    .page {
+        padding: 10px;
+    }
+
+    .recommendations-list {
+        grid-template-columns: 1fr;
+    }
+
+    .popup {
+        padding: 15px;
+        width: 95%;
+    }
+
+    .popup .container {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+
+    .recommendation {
+        flex-direction: column;
+    }
+
+    .recommendation img {
+        height: 180px;
+    }
+
+    .recommendation > div {
+        padding: 12px;
+    }
 }

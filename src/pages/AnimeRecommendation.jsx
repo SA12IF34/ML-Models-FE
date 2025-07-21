@@ -31,10 +31,8 @@ function AnimeRecommendation() {
 
   async function handleRecommend(profile) {
       try {
-          const genresArr = await handleMakeProfile(profile);
           const response = await axios.post(import.meta.env.VITE_ANIME_RECOMMEND_URL, {
-              profile: genresArr,
-              seen_animes: profile
+              profile: profile
           })
   
           if (response.status === 200) {
@@ -122,8 +120,12 @@ function AnimeRecommendation() {
 
         container.className = 's-a';
 
-        img.src = anime['main_picture']['medium'];
-        h4.textContent = anime['title'];
+        console.log(anime)
+
+        const data = anime['data'];
+
+        img.src = data['images']['jpg']['image_url'];
+        h4.textContent = data['title'];
 
         container.append(img, h4);
         profileContainer.appendChild(container);
@@ -164,13 +166,13 @@ function AnimeRecommendation() {
                 
                 div.className = 's-a';
 
-                img.src = anime['main_picture']['medium'];
-                h4.textContent = anime['title'];
+                img.src = anime['data']['images']['jpg']['image_url'];
+                h4.textContent = anime['data']['title'];
 
                 div.append(img, h4);
                 container.appendChild(div);
                 
-                animesArr.push(anime['id']);
+                animesArr.push(anime['data']['mal_id']);
                 input.value = '';
             
                 return;
@@ -213,7 +215,7 @@ function AnimeRecommendation() {
   }, [])
 
   return (
-    <div className='page'>
+    <div className='page anime-page'>
         <a style={{color: 'black'}} href="/"><h3>Back to Home Page</h3></a>
         <h3>
             The model is integrated into the Entertainment part of <a href="https://cms.saifchan.online/" rel='noreferrer' target='_blank'>MandelbrotCMS</a>.

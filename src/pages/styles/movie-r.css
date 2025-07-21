@@ -1,0 +1,24 @@
+/* Additional styles for movie recommendations */
+.movie-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.movie-meta .runtime {
+    background: var(--background);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.movie-meta .genre {
+    color: var(--primary-color);
+}
+
+.sample-profile .rating-input {
+    margin-top: 8px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}

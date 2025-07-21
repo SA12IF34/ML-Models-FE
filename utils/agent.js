@@ -4,30 +4,35 @@ const api = axios.create({
     baseURL: import.meta.env.VITE_API_ROOT_URL
 })
 
-async function handleCallAgent(arrayBuffer, rate) {
+async function handleCallAgent(data, rate) {
     try {
-        let chatHistory = window.sessionStorage.getItem('chatHistory');
-        chatHistory = chatHistory ? JSON.parse(chatHistory) : [];
+        let id = window.sessionStorage.getItem('id');
+
         const response = await api.post('agent/', {
-            message: arrayBuffer,
-            // rate: rate,
-            history: chatHistory
+            data: data,
+            rate: rate,
+            id: id
         });
 
         if (response.status === 200) {
             const data = await response.data;
-            if (data['history'] && data['history'].length > chatHistory.length) {
-                console.log('history updated')
-                window.sessionStorage.setItem('chatHistory', JSON.stringify(data['history']));
+
+            if (data['error']) {
+                alert(data['error']);
+                return -1;
+            } else if (data['nothing']) {
+                return -1;
             }
 
+            data['id'] ? window.sessionStorage.setItem('id', data['id']) : null;
+            
             const audioData = data['audio_data'] ? base64ToByteArrayAndBlob(data['audio_data'], 'audio/mpeg') : null;
 
             return {urls:data['urls'], audioData:audioData, aiMsg:data['ai_message']}
         }
 
     } catch (error) {
-        console.log(error);
+        alert('Encountered a problem communicating with the server.')
     }
 }
 
