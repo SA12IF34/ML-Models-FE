@@ -39,7 +39,7 @@ async function hanldeGetAnimes(animeIds) {
     var animesArr = [];
     for (let id of animeIds) {
         var anime = await handleGetAnime(id);
-        if (typeof anime === 'number' && anime === 500) return [];
+        if (typeof anime === 'number' && anime === 500) continue;
         typeof anime === 'object' ? animesArr.push(anime) : '';
     }
     return animesArr;
