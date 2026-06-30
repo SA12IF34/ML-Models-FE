@@ -112,7 +112,7 @@ function Home() {
                         </Link>
                     </div>
                 </div>
-                <div className="models-container">
+                {/* <div className="models-container">
                     <h2>AI Agents & Apps</h2>
                     <div className="container">
                         <Link to='/apps/python-agent/'>
@@ -121,7 +121,7 @@ function Home() {
                             </div>
                         </Link>
                     </div>
-                </div>
+                </div> */}
             </div>
         </main>
         {init && (
