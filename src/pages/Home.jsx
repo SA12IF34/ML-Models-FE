@@ -112,16 +112,16 @@ function Home() {
                         </Link>
                     </div>
                 </div>
-                {/* <div className="models-container">
+                <div className="models-container">
                     <h2>AI Agents & Apps</h2>
                     <div className="container">
-                        <Link to='/apps/python-agent/'>
+                        <Link target='_blank' to='https://voice-agent.saifchan.site/'>
                             <div className="model">
-                                <h4>AI Agent Assistant</h4>
+                                <h4>Multilingual AI Voice Agent</h4>
                             </div>
                         </Link>
                     </div>
-                </div> */}
+                </div>
             </div>
         </main>
         {init && (
