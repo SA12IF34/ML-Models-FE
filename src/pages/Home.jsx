@@ -115,7 +115,7 @@ function Home() {
                 <div className="models-container">
                     <h2>AI Agents & Apps</h2>
                     <div className="container">
-                        <Link target='_blank' to='https://voice-agent.saifchan.site/'>
+                        <Link target='_blank' to='https://agent.saifchan.online/'>
                             <div className="model">
                                 <h4>Multilingual AI Voice Agent</h4>
                             </div>
