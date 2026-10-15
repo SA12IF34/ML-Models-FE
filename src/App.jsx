@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import AnimeRecommendation from './pages/AnimeRecommendation';
 import MovieRecommendation from './pages/MovieRecommendation';
 import Agent from './pages/Agent';
+import LanguageIdentification from './pages/LanguageIdentification';
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
       <Route path='/models/anime-recommender/' element={<AnimeRecommendation />} />
       <Route path='/models/imdb-recommender/' element={<MovieRecommendation />} />
       <Route path='/apps/python-agent/' element={<Agent />} />
+      <Route path='/models/language-identification/' element={<LanguageIdentification />} />
     </Routes>
   )
 }

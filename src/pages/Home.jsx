@@ -122,6 +122,16 @@ function Home() {
                         </Link>
                     </div>
                 </div>
+                <div className="models-container">
+                    <h2>Natural Language Processing </h2>
+                    <div className="container">
+                        <Link to='/models/language-identification/'>
+                            <div className="model">
+                                <h4>Speech Language Identification Model</h4>
+                            </div>
+                        </Link>
+                    </div>
+                </div>
             </div>
         </main>
         {init && (
